@@ -233,10 +233,6 @@ README.md
 sample-code/
 
 sample-artifacts/
-
-docs/
-
-src/
 ```
 
 ---
