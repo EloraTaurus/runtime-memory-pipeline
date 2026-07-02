@@ -236,6 +236,10 @@ The MacBook Pro result is included as a reproducibility example, not as a claim 
 
 ```text
 Runtime-Memory-Pipeline/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── .gitignore
 ├── README.md
 ├── CHANGELOG.md
 ├── BENCHMARK_METHODOLOGY.md
@@ -243,9 +247,13 @@ Runtime-Memory-Pipeline/
 ├── LICENSE
 ├── requirements.txt
 ├── sample-code/
-│   ├── build_artifacts.py
-│   ├── run_benchmark.py
+│   ├── benchmark.py
 │   ├── binary_backend.py
+│   ├── build_artifacts.py
+│   ├── markdown_backend.py
+│   ├── run_benchmark.py
+│   ├── runtime_memory_builder.py
+│   ├── sqlite_backend.py
 │   └── runtime_memory/
 │       ├── contracts.py
 │       ├── markdown_parser.py
@@ -256,9 +264,18 @@ Runtime-Memory-Pipeline/
 │       └── benchmark/
 ├── sample-artifacts/
 │   ├── markdown/
+│   │   ├── guardrails.md
+│   │   ├── personality.md
+│   │   └── runtime.md
 │   ├── binary/
+│   │   ├── guardrails/
+│   │   ├── personality/
+│   │   ├── runtime/
+│   │   └── manifest.json
 │   └── sqlite/
+│       └── runtime_memory.sqlite3
 └── tests/
+    └── test_runtime_memory_pipeline.py
 ```
 
 ---
