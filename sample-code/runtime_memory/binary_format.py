@@ -28,20 +28,21 @@ def fragment_from_bytes(data: bytes) -> MemoryFragment:
         raise ValueError("binary fragment is shorter than fixed header")
     magic, version, header_len, payload_len, expected_crc = HEADER.unpack_from(data)
     if magic != MAGIC:
-        raise ValueError("invalid magic")
+        raise ValueError(f"invalid magic: expected {MAGIC!r}, got {magic!r}")
     if version != VERSION:
-        raise ValueError(f"unsupported version: {version}")
+        raise ValueError(f"unsupported version: expected {VERSION}, got {version}")
     expected_len = HEADER.size + header_len + payload_len
     if len(data) != expected_len:
-        raise ValueError("length mismatch")
+        raise ValueError(f"length mismatch: expected {expected_len} bytes, got {len(data)}")
     header = data[HEADER.size : HEADER.size + header_len]
     payload = data[HEADER.size + header_len :]
-    if (zlib.crc32(header + payload) & 0xFFFFFFFF) != expected_crc:
-        raise ValueError("crc mismatch")
+    actual_crc = zlib.crc32(header + payload) & 0xFFFFFFFF
+    if actual_crc != expected_crc:
+        raise ValueError(f"crc mismatch: expected {expected_crc}, got {actual_crc}")
     meta = json.loads(header.decode("utf-8"))
     checksum = hashlib.sha256(payload).hexdigest()
     if checksum != meta["checksum"]:
-        raise ValueError("payload checksum mismatch")
+        raise ValueError(f"payload checksum mismatch for {meta.get('fragment_id', '<unknown>')}")
     return MemoryFragment(
         fragment_id=meta["fragment_id"],
         category=meta["category"],

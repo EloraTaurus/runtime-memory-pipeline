@@ -26,6 +26,8 @@ class RecallResult:
     query: str
     context: str
     latency_ms: float
+    retrieval_latency_ms: float
+    context_assembly_latency_ms: float
     fragment_count: int
     token_estimate: int
 

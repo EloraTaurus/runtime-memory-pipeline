@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import resource
 from pathlib import Path
+from statistics import pstdev
 
 
 def rss_mb() -> float:
@@ -26,3 +27,9 @@ def storage_size(path: Path) -> int:
     if path.is_file():
         return path.stat().st_size
     return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
+
+
+def variance(values: list[float]) -> float:
+    if len(values) < 2:
+        return 0.0
+    return pstdev(values)

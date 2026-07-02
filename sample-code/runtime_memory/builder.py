@@ -5,6 +5,7 @@ import json
 import re
 import sqlite3
 import time
+from dataclasses import replace
 from pathlib import Path
 
 from .binary_format import VERSION, fragment_to_bytes
@@ -49,15 +50,18 @@ def compile_binary(fragments: list[MemoryFragment], binary_root: Path) -> dict[s
     manifest = {
         "format": "runtime-memory-pipeline",
         "version": VERSION,
-        "compiled_at": int(time.time()),
-        "compile_time_ms": (time.perf_counter() - started) * 1000,
+        "compiled_at": 0,
+        "compile_time_ms": 0.0,
         "fragment_count": len(entries),
         "compiled_count": compiled,
         "skipped_unchanged_count": skipped,
         "fragments": entries,
     }
     (binary_root / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
-    return manifest
+    result = dict(manifest)
+    result["compiled_at"] = int(time.time())
+    result["compile_time_ms"] = (time.perf_counter() - started) * 1000
+    return result
 
 
 def build_sqlite(fragments: list[MemoryFragment], sqlite_path: Path) -> None:
@@ -107,7 +111,11 @@ def build_sqlite(fragments: list[MemoryFragment], sqlite_path: Path) -> None:
 
 
 def build(markdown_root: Path, binary_root: Path, sqlite_path: Path) -> dict[str, object]:
-    fragments = load_markdown_tree(markdown_root)
+    source_root = Path(markdown_root)
+    fragments = [
+        replace(fragment, source_path=Path(fragment.source_path).relative_to(source_root).as_posix())
+        for fragment in load_markdown_tree(source_root)
+    ]
     manifest = compile_binary(fragments, binary_root)
     build_sqlite(fragments, sqlite_path)
     return {"manifest": manifest, "sqlite": str(sqlite_path), "markdown": str(markdown_root)}

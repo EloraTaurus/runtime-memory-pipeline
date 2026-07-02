@@ -198,7 +198,7 @@ This format is intended as a research prototype rather than a finalized specific
 
 # Benchmark Methodology
 
-The benchmark evaluates identical memory across three backends:
+The benchmark evaluates identical memory across three storage backends:
 
 * Markdown
 * SQLite
@@ -217,9 +217,18 @@ Measurements include:
 * RAM utilisation
 * storage footprint
 
+All three backends share the same runtime orchestration layer: lexical scoring, explicit relationship following, context budget handling, and context assembly. The benchmark is therefore a comparison of storage representation and loading path, not a comparison of different retrieval algorithms.
+
 The benchmark does **not** attempt to prove that binary memory is superior.
 
 Its purpose is to provide a reproducible framework for comparing different runtime memory architectures under identical conditions.
+
+For more information, see:
+
+* `BENCHMARK_METHODOLOGY.md` for the full methodology, limitations, and expected report shape
+* `BENCHMARK_RESULTS_MACBOOK_M4_PRO.md` for an example local run on a MacBook Pro with Apple M4 Pro and 24 GB memory
+
+The MacBook Pro result is included as a reproducibility example, not as a claim that the binary backend is generally faster.
 
 ---
 
@@ -227,22 +236,45 @@ Its purpose is to provide a reproducible framework for comparing different runti
 
 ```text
 Runtime-Memory-Pipeline/
-
-README.md
-
-sample-code/
-
-sample-artifacts/
+├── README.md
+├── CHANGELOG.md
+├── BENCHMARK_METHODOLOGY.md
+├── BENCHMARK_RESULTS_MACBOOK_M4_PRO.md
+├── LICENSE
+├── requirements.txt
+├── sample-code/
+│   ├── build_artifacts.py
+│   ├── run_benchmark.py
+│   ├── binary_backend.py
+│   └── runtime_memory/
+│       ├── contracts.py
+│       ├── markdown_parser.py
+│       ├── binary_format.py
+│       ├── validation.py
+│       ├── builder.py
+│       ├── backends/
+│       └── benchmark/
+├── sample-artifacts/
+│   ├── markdown/
+│   ├── binary/
+│   └── sqlite/
+└── tests/
 ```
 
 ---
 
 # Quick Start
 
-Run the benchmark:
+Install dependencies. The project currently uses only the Python standard library, but `requirements.txt` is included so setup and CI use the same command.
 
 ```bash
 cd Runtime-Memory-Pipeline
+python3 -m pip install -r requirements.txt
+```
+
+Run the benchmark:
+
+```bash
 python3 sample-code/run_benchmark.py
 ```
 
@@ -255,7 +287,13 @@ python3 sample-code/build_artifacts.py
 Validate binary fragments:
 
 ```bash
-python3 sample-code/binary_backend.py
+python3 sample-code/binary_backend.py sample-artifacts/binary
+```
+
+Run tests:
+
+```bash
+python3 -m unittest discover -s tests
 ```
 
 ---
@@ -280,6 +318,8 @@ Current implementation includes:
 * SQLite comparison backend
 * Binary comparison backend
 * Benchmark harness
+* Binary artifact validation for manifest consistency, CRC, payload checksum, and fragment relationships
+* Lightweight GitHub Actions reproducibility workflow
 * Reference implementation suitable for experimentation
 
 ---

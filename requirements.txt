@@ -1,0 +1,2 @@
+# Runtime Memory Pipeline uses only the Python standard library.
+# This file exists so fresh-clone setup and CI can run the same command.

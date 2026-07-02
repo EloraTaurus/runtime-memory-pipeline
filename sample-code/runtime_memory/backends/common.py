@@ -42,8 +42,7 @@ class FragmentBackend:
         self.fragments = fragments
         self.by_id = {fragment.fragment_id: fragment for fragment in fragments}
 
-    def recall(self, query: str, budget: int = 900) -> RecallResult:
-        started = time.perf_counter()
+    def retrieve(self, query: str) -> list[MemoryFragment]:
         ranked = sorted(self.fragments, key=lambda item: (-score(item, query), -item.importance, item.fragment_id))
         selected: list[MemoryFragment] = []
         seen: set[str] = set()
@@ -57,12 +56,24 @@ class FragmentBackend:
                 if related and related.fragment_id not in seen:
                     selected.append(related)
                     seen.add(related.fragment_id)
+        return selected
+
+    def recall(self, query: str, budget: int = 900) -> RecallResult:
+        started = time.perf_counter()
+        retrieval_started = time.perf_counter()
+        selected = self.retrieve(query)
+        retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
+        assembly_started = time.perf_counter()
         context, token_count = assemble(selected, budget)
+        assembly_ms = (time.perf_counter() - assembly_started) * 1000
+        total_ms = (time.perf_counter() - started) * 1000
         return RecallResult(
             backend=self.name,
             query=query,
             context=context,
-            latency_ms=(time.perf_counter() - started) * 1000,
+            latency_ms=total_ms,
+            retrieval_latency_ms=retrieval_ms,
+            context_assembly_latency_ms=assembly_ms,
             fragment_count=len(selected),
             token_estimate=token_count,
         )

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from ..binary_format import fragment_from_bytes
+from ..validation import validate_binary_store
 from .common import FragmentBackend
 
 
@@ -18,5 +19,7 @@ class BinaryBackend(FragmentBackend):
 
 
 def validate(binary_root: Path) -> dict[str, object]:
-    backend = BinaryBackend(binary_root)
-    return {"ok": True, "fragment_count": len(backend.fragments), "root": str(binary_root)}
+    result = validate_binary_store(binary_root)
+    if result["ok"]:
+        result["root"] = str(binary_root)
+    return result
