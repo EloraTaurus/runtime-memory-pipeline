@@ -1,0 +1,103 @@
+{
+  "compile_time_ms": 0.32675000011295197,
+  "compiled_at": 1782998995,
+  "compiled_count": 0,
+  "format": "runtime-memory-pipeline",
+  "fragment_count": 5,
+  "fragments": [
+    {
+      "category": "guardrail",
+      "checksum": "d01d8c988cd8fae99b18af74e7877cf0e8f3716f24a6155bf2e585d76681640e",
+      "id": "sample.guardrails.safety",
+      "importance": 10,
+      "path": "guardrails/sample.guardrails.safety.bin",
+      "relationships": [
+        "sample.guardrails.forbidden_claims"
+      ],
+      "scope": "guardrails",
+      "subject": "Guardrail principles",
+      "tags": [
+        "safety",
+        "guardrails",
+        "evidence"
+      ],
+      "trust_tier": "demo"
+    },
+    {
+      "category": "guardrail",
+      "checksum": "5a587f00ab697eeb1101e51b02e1865f5df1b6ad92500dc1eb7d09502067b38b",
+      "id": "sample.guardrails.forbidden_claims",
+      "importance": 10,
+      "path": "guardrails/sample.guardrails.forbidden_claims.bin",
+      "relationships": [
+        "sample.guardrails.safety"
+      ],
+      "scope": "guardrails",
+      "subject": "Forbidden claims",
+      "tags": [
+        "forbidden",
+        "claims",
+        "benchmark"
+      ],
+      "trust_tier": "demo"
+    },
+    {
+      "category": "personality",
+      "checksum": "13b5fdce5dd7d6c0c01a84c6fcc641b86dfd4ec7322c00f4253a2a14a9571b01",
+      "id": "sample.personality.identity",
+      "importance": 10,
+      "path": "personality/sample.personality.identity.bin",
+      "relationships": [
+        "sample.personality.communication",
+        "sample.runtime.principles"
+      ],
+      "scope": "personality",
+      "subject": "Runtime identity",
+      "tags": [
+        "identity",
+        "persona",
+        "runtime"
+      ],
+      "trust_tier": "demo"
+    },
+    {
+      "category": "personality",
+      "checksum": "5a94d501947a01e8dadd9287c5d1be3402f9742d5ab1ad6a1afefdb8997209db",
+      "id": "sample.personality.communication",
+      "importance": 8,
+      "path": "personality/sample.personality.communication.bin",
+      "relationships": [
+        "sample.personality.identity"
+      ],
+      "scope": "personality",
+      "subject": "Communication style",
+      "tags": [
+        "communication",
+        "style",
+        "persona"
+      ],
+      "trust_tier": "demo"
+    },
+    {
+      "category": "runtime",
+      "checksum": "856b69f1ba474aac848152b388c5dfe0d01c85ae1dbf5db2ee54948fd5d88b29",
+      "id": "sample.runtime.principles",
+      "importance": 9,
+      "path": "runtime/sample.runtime.principles.bin",
+      "relationships": [
+        "sample.personality.identity",
+        "sample.guardrails.safety"
+      ],
+      "scope": "runtime",
+      "subject": "Runtime memory principles",
+      "tags": [
+        "runtime",
+        "binary",
+        "cpu-first"
+      ],
+      "trust_tier": "demo"
+    }
+  ],
+  "skipped_unchanged_count": 5,
+  "version": 1
+}
